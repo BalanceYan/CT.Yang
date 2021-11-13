@@ -36,21 +36,21 @@ Proof. intros; destruct (classic P); tauto. Qed.
 Proposition inp : ∀ P Q : Prop, (P ↔ Q) → (¬ P → ¬ Q).
 Proof. intros; intro. elim H0. apply H; auto. Qed.
 
-(* Axiom and Ensemble *)
 Parameter Class : Type.
 
 Parameter In : Class → Class → Prop.
 Notation "a ∈ A" := (In a A)(at level 70).
 Notation "a ∉ A" := (¬ (a ∈ A))(at level 70).
 
+Parameter Classifier : ∀ P : Class → Prop, Class.
+Notation "\{ P \}" := (Classifier P)(at level 0).
+
+(* Axiom and Ensemble *)
 Axiom ExtAx : ∀ A B : Class, A = B ↔ (∀ x, x ∈ A ↔ x ∈ B).
 Ltac AppE := apply ExtAx; split; intros.
 
 Definition Ensemble x : Prop := ∃ y, x ∈ y.
 Ltac Ens := unfold Ensemble; eauto.
-
-Parameter Classifier : ∀ P : Class → Prop, Class.
-Notation "\{ P \}" := (Classifier P)(at level 0).
 
 Axiom ClaAx : ∀ x P, x ∈ \{ P \} ↔ Ensemble x ∧ (P x).
 
@@ -321,7 +321,36 @@ Proof with eauto.
     apply H2 in H5. apply ClaE in H5; tauto.
 Qed.
 
+Definition Unordered x y := [x] ⋃ [y].
+Notation "[ x | y ] " := (Unordered x y) (at level 0).
+
+Definition Ordered x y := [ [x] | [x | y] ].
+Notation "[ x , y ]" := (Ordered x y) (at level 0).
+
+Definition Relation r := ∀ z, z ∈ r → ∃ x y, z = [x,y].
+
+Definition Function f :=
+  Relation f ∧ ∀ x y z, [x,y] ∈ f ∧ [x,z] ∈ f → y = z.
+
+Definition Value f x := ⋂ \{ λ y, [x,y] ∈ f \}.
+Notation "f [ x ]" := (Value f x)(at level 5).
+
+Definition Domain f := \{ λ x, ∃ y, [x,y] ∈ f \}.
+Notation "dom( f )" := (Domain f)(at level 5).
+
+Definition Range f := \{ λ y, ∃ x, [x,y] ∈ f \}.
+Notation "ran( f )" := (Range f)(at level 5).
+
+Axiom RepAx : ∀ f, Function f → Ensemble dom( f ) → Ensemble ran( f ).
+
+Axiom RegAx : ∀ x, x ≠ ∅ -> ∃ y, y ∈ x ∧ x ∩ y = ∅.
+
 Axiom InfAx : ∃ y, Ensemble y ∧ ∅ ∈ y ∧ (∀ x, x ∈ y → (x ⋃ [x]) ∈ y).
+
+Definition ChoiceFunction c :=
+  Function c /\ ∀ x, x ∈ dom(c) -> c [x] ∈ x.
+
+Axiom ChoAx : ∃ c, ChoiceFunction c /\ dom(c) = μ - [∅].
 
 Fact EmptySet : Ensemble ∅.
 Proof. destruct InfAx as [x [_ [He _]]]. Ens. Qed.

@@ -43,7 +43,7 @@ Proof with eauto.
     apply InterIE in Hv as [Hyv Hyp]. apply SetminIE in Hyv as
       [Hyu Hyd]. apply SetminIE in Hyp as [Hya Hxy].
     assert (Hnq : y ≠ x). { intro. elim Hxy. apply ClaI; Ens. }
-    assert (Hw : ∃ W, W ∈ TNeighS y X cT /\ x ∉ W).
+    assert (Hw : ∃ W, W ∈ TNeighS y X cT ∧ x ∉ W).
     { apply DerivaedP1 in Hyd as [W [Hw He]]... exists W. split.
       apply TNeighSIE... apply InterEqEmI in He... intro.
       assert (W ∩ [x] ≠ ∅).

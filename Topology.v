@@ -36,7 +36,7 @@ Qed.
 Definition TNeigh x U X cT := Topology X cT ∧ x ∈ X ∧ U ⊂ X ∧
   ∃ V, V ∈ cT ∧ x ∈ V ∧ V ⊂ U.
 
-Fact TNeighP : ∀ x U X cT, Ensemble X →
+Corollary TNeighP : ∀ x U X cT, Ensemble X →
   Topology X cT → x ∈ U → U ∈ cT → TNeigh x U X cT.
 Proof with eauto.
   intros * Hxe Ht Hx Hu. split... assert (Hxx : U ⊂ X).
@@ -55,7 +55,7 @@ Qed.
 
 Definition TONeigh x U X cT := TNeigh x U X cT ∧ x ∈ U ∧ U ∈ cT.
 
-Fact TNeighP1 : ∀ x U X cT, Ensemble X → TNeigh x U X cT →
+Corollary TNeighP1 : ∀ x U X cT, Ensemble X → TNeigh x U X cT →
   ∃ V, TONeigh x V X cT ∧ V ⊂ U.
 Proof.
   intros * Hxe [Ht [_ [Hv [V [Hvo [Hxv Huv]]]]]].
@@ -162,10 +162,10 @@ Proof.
   apply ClaE in H. tauto.
 Qed.
 
-Fact DerivaedP : ∀ A X cT, Derivaed A X cT ⊂ X.
+Corollary DerivaedP : ∀ A X cT, Derivaed A X cT ⊂ X.
 Proof. intros * x Hx. apply ClaE in Hx. apply Hx. Qed.
 
-Fact DerivaedP1 : ∀ x C X cT, Topology X cT → C ⊂ X → x ∈ X →
+Corollary DerivaedP1 : ∀ x C X cT, Topology X cT → C ⊂ X → x ∈ X →
   x ∉ Derivaed C X cT → ∃ U, TNeigh x U X cT ∧ U ∩ (C - [x]) = ∅.
 Proof with eauto.
   intros * Ht Hsub Hx Hp.
@@ -321,7 +321,7 @@ Proof.
   apply ClaE in H0. tauto.
 Qed.
 
-Fact cFP : ∀ X cT, Ensemble X → cF X cT ⊂ cP(X).
+Corollary cFP : ∀ X cT, Ensemble X → cF X cT ⊂ cP(X).
 Proof.
   intros * HXe U Hu. apply ClaE in Hu. apply PowerIE; tauto.
 Qed.
@@ -351,7 +351,7 @@ Proof with eauto.
 Qed.
 
 Theorem Theorem3_7c : ∀ cF1 X cT, Ensemble X →
-  Topology X cT → cF1 ≠ ∅ -> cF1 ⊂ cF X cT → ⋂cF1 ∈ cF X cT.
+  Topology X cT → cF1 ≠ ∅ → cF1 ⊂ cF X cT → ⋂cF1 ∈ cF X cT.
 Proof with eauto.
   intros cF1 * HXe Ht Hne Hsub.
   set \{λ A, A ⊂ X ∧ X - A ∈ cF1 \} as cT1. assert (HcT : cT1 ⊂ cT).
